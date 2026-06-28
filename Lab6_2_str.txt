@@ -1,0 +1,123 @@
+Copy the contents of MSG3 to MSG4 after ‘n’ th character in MSG4
+----------------------------------------------------------------
+.section .data
+
+MSG3: .asciz "XYZ"
+
+MSG4:
+    .ascii "ABCDEFG"
+    .space 4          # extra space
+
+n: .long 3
+
+.section .text
+.globl _start
+
+_start:
+
+###################################################
+# Shift MSG4 right by length(MSG3)
+###################################################
+
+    movl $MSG4+6, %esi      # Last character (G)
+    movl $MSG4+9, %edi      # New last position
+
+shift:
+
+    movb (%esi), %al
+    movb %al, (%edi)
+
+    decl %esi
+    decl %edi
+
+    cmpl $MSG4+2, %esi
+    jge shift
+
+###################################################
+# Copy MSG3 after nth character
+###################################################
+
+    movl $MSG3, %esi
+    movl $MSG4+3, %edi
+
+copy:
+
+    movb (%esi), %al
+
+    cmpb $0, %al
+    je done
+
+    movb %al, (%edi)
+
+    incl %esi
+    incl %edi
+
+    jmp copy
+
+done:
+
+    movl $1, %eax
+    movl $0, %ebx
+    int $0x80
+
+Insert a byte in MSG1
+---------------------
+.section .data
+
+MSG1:
+    .asciz "HELLO"
+BYTE:
+    .byte 'X'
+
+.section .text
+.globl _start
+
+_start:
+
+    # Move to end of string (before NULL)
+    movl $MSG1+5,%esi
+
+shift:
+
+    movb (%esi),%al
+    movb %al,1(%esi)
+
+    decl %esi
+
+    cmpl $MSG1+2,%esi
+    jge shift
+
+    movb BYTE,%al
+    movb %al,3(MSG1)
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
+
+Delete a byte in MSG1
+---------------------
+.section .data
+
+MSG1:
+    .asciz "HELLO"
+
+.section .text
+.globl _start
+
+_start:
+
+    movl $MSG1+2,%esi
+
+delete:
+
+    movb 1(%esi),%al
+    movb %al,(%esi)
+
+    incl %esi
+
+    cmpb $0,%al
+    jne delete
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80

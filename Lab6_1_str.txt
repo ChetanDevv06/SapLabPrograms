@@ -1,0 +1,70 @@
+Copy the contents of MSG1 to MSG2
+----------------------------------
+.section .data
+
+MSG1: .asciz "HELLO"
+MSG2: .space 6
+
+.section .text
+.globl _start
+
+_start:
+
+    movl $MSG1,%esi
+    movl $MSG2,%edi
+
+loop:
+
+    movb (%esi),%al
+
+    movb %al,(%edi)
+
+    cmpb $0,%al
+    je done
+
+    incl %esi
+    incl %edi
+
+    jmp loop
+
+done:
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
+
+Copy the contents of MSG1 to MSG3 in reverse order
+-------------------------------------------------
+.section .data
+
+MSG1: .asciz "HELLO"
+MSG3: .space 6
+
+.section .text
+.globl _start
+
+_start:
+
+    # ESI points to last character of MSG1
+    movl $MSG1+4, %esi
+
+    # EDI points to beginning of MSG3
+    movl $MSG3, %edi
+
+loop:
+
+    movb (%esi), %al
+
+    movb %al, (%edi)
+
+    decl %esi
+    incl %edi
+
+    cmpl $MSG1-1, %esi
+    jne loop
+
+    movb $0, (%edi)
+
+    movl $1, %eax
+    movl $0, %ebx
+    int $0x80

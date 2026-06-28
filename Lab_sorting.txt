@@ -1,0 +1,113 @@
+Develop an assembly language program to perform the following
+1.Arrange an array of ’n’ numbers in ascending order
+2.Arrange an array of ’n’ numbers in descending order
+-------------------------------------------------------------
+part1:ascending
+.section .data
+
+array:
+    .long 40,10,30,20,50
+
+.section .text
+.globl _start
+
+_start:
+
+    movl $0,%ecx              # i = 0
+
+outer:
+
+    cmpl $4,%ecx
+    jge done
+
+    movl $0,%edx              # j = 0
+
+inner:
+
+    movl $4,%eax
+    subl %ecx,%eax            # 4-i
+
+    cmpl %eax,%edx
+    jge next
+
+    movl array(,%edx,4),%eax
+    movl array+4(,%edx,4),%ebx
+
+    cmpl %ebx,%eax
+    jle noswap
+
+    movl %ebx,array(,%edx,4)
+    movl %eax,array+4(,%edx,4)
+
+noswap:
+
+    incl %edx
+    jmp inner
+
+next:
+
+    incl %ecx
+    jmp outer
+
+done:
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
+
+Part2: descending
+.section .data
+
+array:
+    .long 40,10,30,20,50
+
+.section .text
+.globl _start
+
+_start:
+
+    movl $0,%ecx              # i = 0
+
+outer:
+
+    cmpl $4,%ecx
+    jge done                  # if i >= 4, finish
+
+    movl $0,%edx              # j = 0
+
+inner:
+
+    movl $4,%eax
+    subl %ecx,%eax            # eax = 4 - i
+
+    cmpl %eax,%edx
+    jge next                  # if j >= (4-i), next outer loop
+
+    # Load adjacent elements
+    movl array(,%edx,4),%eax
+    movl array+4(,%edx,4),%ebx
+
+    # Descending order:
+    # If left >= right, don't swap
+    cmpl %ebx,%eax
+    jge noswap
+
+    # Swap
+    movl %ebx,array(,%edx,4)
+    movl %eax,array+4(,%edx,4)
+
+noswap:
+
+    incl %edx
+    jmp inner
+
+next:
+
+    incl %ecx
+    jmp outer
+
+done:
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80

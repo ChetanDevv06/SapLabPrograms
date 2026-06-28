@@ -1,0 +1,50 @@
+Develop an assembly language program to perform the following:
+1. Searching an element in an array of ‘n’ numbers
+2. Searching a character from a string
+-----------------------------------------------------------------
+.section .data
+
+array:
+    .long 10,20,30,40,50
+
+key:
+    .long 30
+
+index:
+    .long -1
+
+.section .text
+.globl _start
+
+_start:
+
+    movl $0,%ecx              # i = 0
+
+loop:
+
+    cmpl $5,%ecx
+    jge not_found
+
+    movl array(,%ecx,4),%eax
+
+    cmpl key,%eax
+    je found
+
+    incl %ecx
+    jmp loop
+
+found:
+
+    movl %ecx,index
+
+    jmp done
+
+not_found:
+
+    movl $-1,index
+
+done:
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
