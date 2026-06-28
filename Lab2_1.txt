@@ -1,0 +1,84 @@
+
+//Consider the following source code fragment
+Int a,b,c,d;
+a= (b + c)-d;
+a=(b*c) / d;
+Assume that b, c, d are in registers. Develop an assembly language program to perform
+this assignment statements.Assume that b, c are in registers and d in memory. Develop
+an assembly language program to perform this assignment statements.
+--------------------------------------------------------------------------------------
+CASE 1:
+
+.section .data
+
+a: .long 0
+
+.section .text
+.global _start
+
+_start:
+
+movl %ebx, %eax      # EAX = b
+addl %ecx, %eax      # EAX = b+c
+subl %edx, %eax      # EAX = (b+c)-d
+movl %eax, a         # a = result
+
+###################################################
+# a = (b*c)/d
+###################################################
+
+movl %ebx, %eax      # EAX = b
+imull %ecx           # EDX:EAX = EAX * ECX
+
+idivl %edx           # Divide by d
+
+movl %eax, a
+
+###################################################
+
+movl $1,%eax
+movl $0,%ebx
+int $0x80
+
+CASE 2:
+.section .data
+
+d: .long 5
+a: .long 0
+
+.section .text
+.global _start
+
+_start:
+
+####################################################
+# EBX=b
+# ECX=c
+# d is in memory
+####################################################
+
+movl %ebx,%eax
+addl %ecx,%eax
+subl d,%eax
+
+movl %eax,a
+
+####################################################
+# Multiplication
+####################################################
+
+movl %ebx,%eax
+
+imull %ecx
+
+movl d,%ecx
+
+idivl %ecx
+
+movl %eax,a
+
+####################################################
+
+movl $1,%eax
+movl $0,%ebx
+int $0x80

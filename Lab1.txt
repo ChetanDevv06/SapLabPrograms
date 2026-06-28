@@ -1,0 +1,119 @@
+.section .data
+# Sources (constants)
+val32:   .long  0x11223344
+val16:   .word  0x5566
+val8:    .byte  0x77
+
+# Sources (memory) for Q5 "from memory to ..."
+memS32:  .long  0xAABBCCDD
+memS16:  .word  0xCCDD
+memS8:   .byte  0xEE
+
+# Destinations (only 3)
+memD32:  .long  0
+memD16:  .word  0
+memD8:   .byte  0
+
+.section .text
+.globl _start
+_start:
+
+# ============================================================
+# Q1) 32-bit integer data to: GP register, Segment register, Memory
+# ============================================================
+Q1_32:
+    movl val32, %eax          # 32-bit -> GP (EAX)
+
+    movw %ds, %bx             # GP holds a valid selector (BX = DS)
+    movw %bx, %es             # -> Segment register (ES)  [Linux-safe]
+
+    movl %eax, memD32         # -> Memory (memD32)
+
+# ============================================================
+# Q2) 16-bit integer data to: GP register, Segment register, Memory
+# ============================================================
+Q2_16:
+    movw val16, %ax           # 16-bit -> GP (AX)
+
+    movw %ds, %bx             # GP holds a valid selector (BX = DS)
+    movw %bx, %fs             # -> Segment register (FS)  [Linux-safe]
+
+    movw %ax, memD16          # -> Memory (memD16)
+
+# ============================================================
+# Q3) 8-bit integer data to: GP register, Segment register, Memory
+# ============================================================
+Q3_8:
+    movb val8, %al            # 8-bit -> GP (AL)
+
+    movw %ds, %bx             # GP holds a valid selector (BX = DS)
+    movw %bx, %gs             # -> Segment register (GS)  [Linux-safe]
+
+    movb %al, memD8           # -> Memory (memD8)
+
+# ============================================================
+# Q4) From a GP register to: GP register, Segment register, Memory
+#     Repeat for 32-bit, 16-bit, 8-bit
+# ============================================================
+
+Q4_32:
+    # assume EAX already has 32-bit data (from Q1_32)
+    movl %eax, %edx           # GP -> GP (EAX -> EDX)
+
+    movw %ds, %bx             # GP -> Segment (through BX): DS -> ES
+    movw %bx, %es
+
+    movl %edx, memD32         # GP -> Memory
+
+Q4_16:
+    # assume AX already has 16-bit data (from Q2_16)
+    movw %ax, %dx             # GP -> GP (AX -> DX)
+
+    movw %ds, %bx             # GP -> Segment (through BX): DS -> FS
+    movw %bx, %fs
+
+    movw %dx, memD16          # GP -> Memory
+
+Q4_8:
+    # assume AL already has 8-bit data (from Q3_8)
+    movb %al, %dl             # GP -> GP (AL -> DL)
+
+    movw %ds, %bx             # GP -> Segment (through BX): DS -> GS
+    movw %bx, %gs
+
+    movb %dl, memD8           # GP -> Memory
+
+# ============================================================
+# Q5) From memory to: GP register, Segment register, Memory
+#     Repeat for 32-bit, 16-bit, 8-bit
+# ============================================================
+
+Q5_32:
+    movl memS32, %eax         # Memory -> GP (EAX)
+
+    movw %ds, %bx             # Memory -> Segment (Linux-safe demo): DS -> ES
+    movw %bx, %es
+
+    movl %eax, memD32         # Memory -> Memory (via reg): memS32 -> memD32
+
+Q5_16:
+    movw memS16, %ax          # Memory -> GP (AX)
+
+    movw %ds, %bx             # Memory -> Segment (Linux-safe demo): DS -> FS
+    movw %bx, %fs
+
+    movw %ax, memD16          # Memory -> Memory (via reg): memS16 -> memD16
+
+Q5_8:
+    movb memS8, %al           # Memory -> GP (AL)
+
+    movw %ds, %bx             # Memory -> Segment (Linux-safe demo): DS -> GS
+    movw %bx, %gs
+
+    movb %al, memD8           # Memory -> Memory (via reg): memS8 -> memD8
+
+# ------------------------------------------------------------
+before_exit:
+    movl $1, %eax
+    xorl %ebx, %ebx
+    int  $0x80

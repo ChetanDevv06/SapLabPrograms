@@ -1,0 +1,9 @@
+ For the following values of A and B, predict the values of the N, Z, V and C flags produced by
+performing the operation A + B. Perform the following operation. Load the values of A and B
+into two registers. Perform an addition of the two registers. Read the flags after each
+addition and compare those flag values with your predictions. Comment on the results.
+When the data values are signed numbers, what do the flags mean? Does their meaning
+change when the data values are unsigned numbers?
+0xFFFF0000 0xFFFFFFFF 0x67654321 (A)
++ 0x87654321 +0x12345678 + 0x23110000 (B)
+--------------------------------------------------------------------------------------
