@@ -7,3 +7,85 @@ change when the data values are unsigned numbers?
 0xFFFF0000 0xFFFFFFFF 0x67654321 (A)
 + 0x87654321 +0x12345678 + 0x23110000 (B)
 --------------------------------------------------------------------------------------
+Case 1:
+.section .data
+
+a: .long 0
+
+.section .text
+.global _start
+
+_start:
+
+###################################################
+# Assume:
+# EBX = b
+# ECX = c
+# EDX = d
+###################################################
+
+# a = (b + c) - d
+
+movl %ebx, %eax      # EAX = b
+addl %ecx, %eax      # EAX = b+c
+subl %edx, %eax      # EAX = (b+c)-d
+movl %eax, a         # a = result
+
+###################################################
+# a = (b*c)/d
+###################################################
+
+movl %ebx, %eax      # EAX = b
+imull %ecx           # EDX:EAX = EAX * ECX
+
+idivl %edx           # Divide by d
+
+movl %eax, a
+
+###################################################
+
+movl $1,%eax
+movl $0,%ebx
+int $0x80
+Case 2:
+.section .data
+
+d: .long 5
+a: .long 0
+
+.section .text
+.global _start
+
+_start:
+
+####################################################
+# EBX=b
+# ECX=c
+# d is in memory
+####################################################
+
+movl %ebx,%eax
+addl %ecx,%eax
+subl d,%eax
+
+movl %eax,a
+
+####################################################
+# Multiplication
+####################################################
+
+movl %ebx,%eax
+
+imull %ecx
+
+movl d,%ecx
+
+idivl %ecx
+
+movl %eax,a
+
+####################################################
+
+movl $1,%eax
+movl $0,%ebx
+int $0x80

@@ -1,0 +1,94 @@
+Consider the following source code fragment
+Int a,b,c,d;
+a= (b AND c) NOT d;
+a=(b XOR c) OR d;
+Assume that b, c, d are in registers. Develop an assembly language program to
+perform this assignment statements. Assume that b, c are in registers and d in
+memory. Develop an assembly language program to perform this assignment
+statements.
+--------------------------------------------------------------------------------------------------------------------------
+Case 1:
+.section .data
+a: .long 0
+
+.section .text
+.global _start
+
+_start:
+
+###################################################
+# a = (b & c) & (~d)
+###################################################
+
+movl %ebx, %eax      # EAX = b
+andl %ecx, %eax      # EAX = b & c
+
+movl %edx, %esi      # Copy d
+notl %esi            # ESI = ~d
+
+andl %esi, %eax      # (b&c)&(~d)
+
+movl %eax, a
+
+###################################################
+# a = (b ^ c) | d
+###################################################
+
+movl %ebx, %eax      # EAX = b
+
+xorl %ecx, %eax      # b ^ c
+
+orl %edx, %eax       # (b^c)|d
+
+movl %eax, a
+
+###################################################
+
+movl $1,%eax
+movl $0,%ebx
+int $0x80
+
+Case 2:
+.section .data
+
+d: .long 5
+a: .long 0
+
+.section .text
+.global _start
+
+_start:
+
+###################################################
+# a=(b&c)&(~d)
+###################################################
+
+movl %ebx,%eax
+
+andl %ecx,%eax
+
+movl d,%esi
+
+notl %esi
+
+andl %esi,%eax
+
+movl %eax,a
+
+###################################################
+# a=(b^c)|d
+###################################################
+
+movl %ebx,%eax
+
+xorl %ecx,%eax
+
+orl d,%eax
+
+movl %eax,a
+
+###################################################
+
+movl $1,%eax
+movl $0,%ebx
+int $0x80

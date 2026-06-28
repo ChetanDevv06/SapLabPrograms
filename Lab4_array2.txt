@@ -1,0 +1,30 @@
+Create an array with 10 integers. Develop an assembly language program to print
+the elements of the array.
+-----------------------------------------------------------------------------------------------------------------------
+.section .data
+
+array:
+.long 10,20,30,40,50,60,70,80,90,100
+
+.section .text
+.global _start
+
+_start:
+
+    movl $0,%ecx          # index
+
+loop:
+
+    movl array(,%ecx,4),%eax
+
+    # Here EAX contains array[index]
+
+    incl %ecx
+
+    cmpl $10,%ecx
+
+    jl loop
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80

@@ -1,0 +1,127 @@
+Compute GCD for the given two natural numbers
+----------------------------------------------
+.section .data
+
+a:.long 24
+b:.long 18
+
+.section .text
+.global _start
+
+_start:
+
+loop:
+
+    movl a,%eax
+
+    cmpl b,%eax
+
+    je done
+
+    jg greater
+
+    movl b,%eax
+
+    subl a,%eax
+
+    movl %eax,b
+
+    jmp loop
+
+greater:
+
+    movl a,%eax
+
+    subl b,%eax
+
+    movl %eax,a
+
+    jmp loop
+
+done:
+
+    movl a,%eax
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
+
+Compute LCM for the given two natural numbers
+---------------------------------------------
+.section .data
+
+a:      .long 24
+b:      .long 18
+
+a_org:  .long 24
+b_org:  .long 18
+
+lcm:    .long 0
+
+.section .text
+.globl _start
+
+_start:
+
+# ==========================
+# Compute GCD
+# ==========================
+
+loop:
+
+    movl a, %eax
+    cmpl b, %eax
+
+    je gcd_found          # if a == b
+
+    jg greater            # if a > b
+
+less:
+
+    movl b, %eax
+    subl a, %eax
+    movl %eax, b
+    jmp loop
+
+greater:
+
+    movl a, %eax
+    subl b, %eax
+    movl %eax, a
+    jmp loop
+
+# ==========================
+# GCD found
+# ==========================
+
+gcd_found:
+
+    movl a, %ecx          # ECX = GCD
+
+# ==========================
+# Multiply original numbers
+# ==========================
+
+    movl a_org, %eax
+
+    imull b_org           # EDX:EAX = a*b
+
+# ==========================
+# Divide by GCD
+# ==========================
+
+    idivl %ecx            # EAX = (a*b)/gcd
+
+# ==========================
+# Store LCM
+# ==========================
+
+    movl %eax, lcm
+
+# ==========================
+# Exit
+# ==========================
+
+    movl $1, %eax
+    movl $0, %ebx
+    int $0x80

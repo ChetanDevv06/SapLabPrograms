@@ -1,0 +1,53 @@
+Consider the following source code fragment
+Int a,b,c,d;
+A=(b*c) / d;
+Perform multiplication and division by shift operations
+-----------------------------------------------------------------------------------------------------------------------
+Case 1:
+.section .data
+
+A: .long 0
+
+.section .text
+.global _start
+
+_start:
+
+    # Assume EBX contains b
+
+    movl %ebx, %eax      # EAX = b
+
+    shll $3, %eax        # Multiply by 8 (2^3)
+
+    shrl $2, %eax        # Divide by 4 (2^2)
+
+    movl %eax, A         # Store result in A
+
+    # Exit
+
+    movl $1, %eax
+    movl $0, %ebx
+    int $0x80
+
+Case 2:
+.section .data
+
+b: .long 5
+A: .long 0
+
+.section .text
+.global _start
+
+_start:
+
+    movl b, %eax
+
+    shll $3, %eax
+
+    shrl $2, %eax
+
+    movl %eax, A
+
+    movl $1, %eax
+    movl $0, %ebx
+    int $0x80

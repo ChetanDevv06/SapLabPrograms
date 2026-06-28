@@ -1,0 +1,88 @@
+Print all ‘n’ natural numbers
+---------------------------------
+.section .data
+
+n: .long 10
+
+.section .text
+.global _start
+
+_start:
+
+    movl $1,%ecx          # i=1
+
+loop:
+
+    movl %ecx,%eax        # Number to "print"
+
+    # Check EAX in GDB
+
+    incl %ecx
+
+    cmpl n,%ecx
+
+    jle loop
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
+
+Print all ‘n’ natural numbers in reverse order
+---------------------------------------------
+.section .data
+
+n: .long 10
+
+.section .text
+.global _start
+
+_start:
+
+    movl n,%ecx
+
+loop:
+
+    movl %ecx,%eax
+
+    decl %ecx
+
+    cmpl $1,%ecx
+
+    jge loop
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
+
+Sum of all ‘n’ natural numbers
+-------------------------------
+
+.section .data
+
+n: .long 10
+sum: .long 0
+
+.section .text
+.global _start
+
+_start:
+
+    movl $1,%ecx          # i
+
+    movl $0,%eax          # sum
+
+loop:
+
+    addl %ecx,%eax
+
+    incl %ecx
+
+    cmpl n,%ecx
+
+    jle loop
+
+    movl %eax,sum
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80

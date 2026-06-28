@@ -1,0 +1,31 @@
+Develop assembly language program to perform the following array assignment in C:
+for ( i = 0; i <= 10; i++)
+{
+a[i] = 0;
+}
+--------------------------------------------------------------------------------------------------------------------------
+.section .data
+
+array:
+.long 1,2,3,4,5,6,7,8,9,10,11
+
+.section .text
+.global _start
+
+_start:
+
+    movl $0,%ecx              # i = 0
+
+loop:
+
+    movl $0,array(,%ecx,4)    # array[i]=0
+
+    incl %ecx
+
+    cmpl $11,%ecx
+
+    jl loop
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80

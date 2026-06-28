@@ -1,0 +1,52 @@
+Print all even numbers in ‘n’ natural numbers
+----------------------------------------------
+.section .data
+
+n:.long 10
+
+.section .text
+.global _start
+
+_start:
+
+    movl $2,%ecx
+
+loop:
+
+    movl %ecx,%eax
+
+    addl $2,%ecx
+
+    cmpl n,%ecx
+
+    jle loop
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
+Print all odd numbers in ‘n’ natural numbers
+----------------------------------------------
+.section .data
+
+n:.long 10
+
+.section .text
+.global _start
+
+_start:
+
+    movl $1,%ecx
+
+loop:
+
+    movl %ecx,%eax
+
+    addl $2,%ecx
+
+    cmpl n,%ecx
+
+    jle loop
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
