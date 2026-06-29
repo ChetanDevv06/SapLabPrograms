@@ -1,6 +1,5 @@
 Develop an assembly language program to perform the following:
 1. Searching an element in an array of ‘n’ numbers
-2. Searching a character from a string
 -----------------------------------------------------------------
 .section .data
 
@@ -42,6 +41,59 @@ found:
 not_found:
 
     movl $-1,index
+
+done:
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
+
+2. Searching a character from a string
+-----------------------------------------
+.section .data
+
+MSG:
+    .asciz "HELLO"
+
+key:
+    .byte 'L'
+
+position:
+    .long -1
+
+.section .text
+.globl _start
+
+_start:
+
+    movl $MSG,%esi
+
+    movl $0,%ecx
+
+loop:
+
+    movb (%esi),%al
+
+    cmpb $0,%al
+    je not_found
+
+    cmpb key,%al
+    je found
+
+    incl %esi
+    incl %ecx
+
+    jmp loop
+
+found:
+
+    movl %ecx,position
+
+    jmp done
+
+not_found:
+
+    movl $-1,position
 
 done:
 
