@@ -1,0 +1,54 @@
+.section .data
+
+a: .long 0
+
+b: .long 4
+c: .long 5
+d: .long 10
+e: .long 3
+f: .long 2
+
+.section .text
+.globl _start
+
+_start:
+
+    # (b AND c)
+
+    movl b,%eax
+
+    andl c,%eax
+
+    # NOT d
+
+    movl d,%ebx
+
+    notl %ebx
+
+    # OR
+
+    orl %ebx,%eax
+
+    # Save first expression
+
+    movl %eax,%esi
+
+    # (e<<2)
+
+    movl e,%eax
+
+    shll $2,%eax
+
+    # AND f
+
+    andl f,%eax
+
+    # XOR
+
+    xorl %esi,%eax
+
+    movl %eax,a
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
