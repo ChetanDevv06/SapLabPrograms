@@ -13,3 +13,5 @@ To examine the registers: print $registername
 To get the value of variable in memory: print/x *(unsigned int*)&val32
                                                                        print/x *(unsigned short*)&val16
                                                                         print/x *(unsigned char*)&val8
+
+Name of Language: x86 Assembly Language (32-bit) using AT&T Syntax with the GNU Assembler (GAS).
