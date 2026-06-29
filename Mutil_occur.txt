@@ -1,0 +1,46 @@
+.section .data
+
+array:
+.long 3,4,5,6,7,8,3,5,7,9,4
+
+key:
+.long 3
+
+.section .text
+.globl _start
+
+_start:
+
+    movl $0,%ecx
+
+loop:
+
+    cmpl $11,%ecx
+    jge done
+
+    movl array(,%ecx,4),%eax
+
+    cmpl key,%eax
+
+    je found
+
+next:
+
+    incl %ecx
+
+    jmp loop
+
+found:
+
+    # ECX contains index of occurrence
+    # Check using GDB
+
+    incl %ecx
+
+    jmp loop
+
+done:
+
+    movl $1,%eax
+    movl $0,%ebx
+    int $0x80
