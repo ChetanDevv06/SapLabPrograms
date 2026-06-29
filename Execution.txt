@@ -1,0 +1,15 @@
+To Open a File In Linux Terminal:        sudo nano filename.s 
+                                                                 copy or write the code
+                                                                 CTRL + X , Y and ENTER
+To compile:              as --32 -g -o filename.o filename.s
+To link:	                 ld -m elf_i386 -o filename filename.o
+To run:  		gdb –q filename
+To set BreakPoint: break filename.s:linenumber
+                                 break label
+To execute:              run
+To examine the registers: print $registername
+                                              info registers registername
+ To examine the address of variable in memory: print/x &variablename 
+To get the value of variable in memory: print/x *(unsigned int*)&val32
+                                                                       print/x *(unsigned short*)&val16
+                                                                        print/x *(unsigned char*)&val8
